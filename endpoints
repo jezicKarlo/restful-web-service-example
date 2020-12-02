@@ -3,7 +3,7 @@ GET -> login (if admin get all users)
 POST -> register
 
 /users/{userId}
-GET -> get personal inforamtion
+GET -> get personal information
 PUT -> update some of your personal information
 DELETE -> delete user
 
@@ -15,10 +15,14 @@ DELETE -> delete all playlists
 
 /users/{userId/playlists/{playlistId}
 GET -> get all songs from playlist
-POST -> add new song to playlist
 PUT -> change name of playlist (or something else)
 DELETE -> delete playlist
 
-/users/{userId}/playlist/{playlistId}/{songId}
+/users/{userId}/playlists/{playlistId}/songs
+GET -> get all songs in playlist
+POST -> add new song to playlist
+DELETE -> clear playlist
+
+/users/{userId}/playlist/{playlistId}/songs/{songId}
 GET -> get song
 DELETE -> delete song from playlist
