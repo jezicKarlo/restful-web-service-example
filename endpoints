@@ -12,7 +12,6 @@ GET -> fetch all user playlists
 POST -> create new playlist for user
 DELETE -> delete all playlists
 
-
 /users/{userId/playlists/{playlistId}
 GET -> get all songs from playlist
 PUT -> change name of playlist (or something else)
