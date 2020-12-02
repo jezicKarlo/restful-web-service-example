@@ -1,0 +1,24 @@
+/users
+GET -> login (if admin get all users)
+POST -> register
+
+/users/{userId}
+GET -> get personal inforamtion
+PUT -> update some of your personal information
+DELETE -> delete user
+
+/users/{userId}/playlists
+GET -> fetch all user playlists
+POST -> create new playlist for user
+DELETE -> delete all playlists
+
+
+/users/{userId/playlists/{playlistId}
+GET -> get all songs from playlist
+POST -> add new song to playlist
+PUT -> change name of playlist (or something else)
+DELETE -> delete playlist
+
+/users/{userId}/playlist/{playlistId}/{songId}
+GET -> get song
+DELETE -> delete song from playlist
