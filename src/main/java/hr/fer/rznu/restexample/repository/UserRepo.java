@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class UserRepo implements UserRepository {
@@ -15,9 +16,17 @@ public class UserRepo implements UserRepository {
         users = new HashMap<>();
     }
 
+
     @Override
-    public User getUser(Integer id) {
+    public User getUserById(Integer id) {
         return users.get(id);
+    }
+
+    @Override
+    public Optional<User> getByUsername(String username) {
+        return users.values().stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst();
     }
 
     @Override

@@ -3,12 +3,13 @@ package hr.fer.rznu.restexample.entity;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class User {
 
-    private int id;
-
+    private UUID UUID;
+    private Integer id;
     private String username;
     private String firstName;
     private String lastName;
