@@ -4,24 +4,15 @@ POST -> register
 
 /users/{userId}
 GET -> get personal information
-PUT -> update some of your personal information
+PUT -> edit some of your personal information
 DELETE -> delete user
 
-/users/{userId}/playlists
-GET -> fetch all user playlists
-POST -> create new playlist for user
-DELETE -> delete all playlists
+/users/{userId}/notes
+GET -> fetch all user notes
+POST -> create new note
+DELETE -> delete all notes
 
-/users/{userId/playlists/{playlistId}
-GET -> get all songs from playlist
-PUT -> change name of playlist (or something else)
-DELETE -> delete playlist
-
-/users/{userId}/playlists/{playlistId}/songs
-GET -> get all songs in playlist
-POST -> add new song to playlist
-DELETE -> clear playlist
-
-/users/{userId}/playlist/{playlistId}/songs/{songId}
-GET -> get song
-DELETE -> delete song from playlist
+users/{userId}/notes/{noteId}
+GET -> fetch note
+PUT -> edit note
+DELETE -> delete note
