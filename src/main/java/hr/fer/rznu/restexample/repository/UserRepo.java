@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class UserRepo implements UserRepository {
@@ -23,10 +24,10 @@ public class UserRepo implements UserRepository {
     }
 
     @Override
-    public Optional<User> getByUsername(String username) {
+    public User getByUsername(String username) {
         return users.values().stream()
                 .filter(user -> user.getUsername().equals(username))
-                .findFirst();
+                .collect(Collectors.toList()).get(0);
     }
 
     @Override

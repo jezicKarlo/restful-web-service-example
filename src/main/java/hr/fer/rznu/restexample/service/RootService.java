@@ -18,12 +18,11 @@ public class RootService {
     }
 
     public UUID authenticate(LoginForm loginForm) {
-        Optional<User> optionalUser = repository.getByUsername(loginForm.getUsername());
-        if (optionalUser.isEmpty()) {
+        User user = repository.getByUsername(loginForm.getUsername());
+        if (user == null) {
             return null;
         }
-        User user = optionalUser.get();
-        if (loginForm.getPassword().equals(user.getPassword())) {
+        if (user.getPassword().equals(loginForm.getPassword())) {
             return user.getUUID();
         }
         return null;

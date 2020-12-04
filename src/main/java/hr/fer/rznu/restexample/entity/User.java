@@ -2,7 +2,6 @@ package hr.fer.rznu.restexample.entity;
 
 import lombok.Data;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -14,5 +13,4 @@ public class User {
     private String firstName;
     private String lastName;
     private String password;
-    private List<Note> notes;
 }
