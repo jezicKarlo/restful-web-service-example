@@ -2,7 +2,7 @@ package hr.fer.rznu.restexample.repository;
 
 import hr.fer.rznu.restexample.entity.User;
 
-import java.util.Optional;
+import java.util.List;
 
 
 public interface UserRepository {
@@ -12,4 +12,5 @@ public interface UserRepository {
     void createUser(User user);
     User updateUser(User user);
     User deleteUser(Integer id);
+    List<User> allUsers();
 }

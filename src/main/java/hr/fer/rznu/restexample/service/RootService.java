@@ -31,4 +31,9 @@ public class RootService {
         User user = repository.getUserById(id);
         return user.getUUID() == uuid;
     }
+
+    public boolean isAdmin(UUID uuid) {
+        User admin = repository.getByUsername("admin");
+        return admin.getUUID() == uuid;
+    }
 }
