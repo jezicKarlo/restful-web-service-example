@@ -3,7 +3,6 @@ package hr.fer.rznu.restexample.service;
 import hr.fer.rznu.restexample.dto.LoginForm;
 import hr.fer.rznu.restexample.entity.User;
 import hr.fer.rznu.restexample.repository.UserRepository;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -37,6 +36,16 @@ class RootServiceTest {
         assertTrue(service.authorize(user.getUUID(), 1));
     }
 
+    @Test
+    public void isAdminTest() {
+        User admin = createAdmin();
+        UserRepository repository = Mockito.mock(UserRepository.class);
+        Mockito.when(repository.getByUsername("admin")).thenReturn(admin);
+
+        RootService service = new RootService(repository);
+        assertTrue(service.isAdmin(admin.getUUID()));
+    }
+
     private LoginForm createLoginForm() {
         LoginForm loginForm = new LoginForm();
         loginForm.setUsername("kjezic");
@@ -51,6 +60,19 @@ class RootServiceTest {
         user.setId(1);
         user.setPassword("1234");
         user.setUsername("kjezic");
+        user.setRole("user");
+        user.setUUID(UUID.randomUUID());
+        return user;
+    }
+
+    private static User createAdmin() {
+        User user = new User();
+        user.setFirstName("Admin");
+        user.setLastName("Admin");
+        user.setId(2);
+        user.setPassword("1234");
+        user.setUsername("admin");
+        user.setRole("admin");
         user.setUUID(UUID.randomUUID());
         return user;
     }
