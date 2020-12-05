@@ -30,7 +30,7 @@ class RootServiceTest {
     public void authorizeTest() {
         User user = createUser();
         UserRepository repository = Mockito.mock(UserRepository.class);
-        Mockito.when(repository.getUserById(1)).thenReturn(user);
+        Mockito.when(repository.getById(1)).thenReturn(user);
 
         RootService service = new RootService(repository);
         assertTrue(service.authorize(user.getUUID(), 1));

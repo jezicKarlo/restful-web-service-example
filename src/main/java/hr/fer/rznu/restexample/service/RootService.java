@@ -28,7 +28,7 @@ public class RootService {
     }
 
     public boolean authorize(UUID uuid, Integer id) {
-        User user = repository.getUserById(id);
+        User user = repository.getById(id);
         return user.getUUID() == uuid;
     }
 

@@ -20,7 +20,7 @@ public class UserRepo implements UserRepository {
 
 
     @Override
-    public User getUserById(Integer id) {
+    public User getById(Integer id) {
         return users.get(id);
     }
 
