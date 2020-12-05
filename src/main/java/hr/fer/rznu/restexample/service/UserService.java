@@ -15,7 +15,4 @@ public class UserService {
         this.repository = repository;
     }
 
-    public List<User> allUsers() {
-        return repository.allUsers();
-    }
 }
