@@ -1,10 +1,10 @@
 package hr.fer.rznu.restexample.repository;
 
 import hr.fer.rznu.restexample.entity.User;
+import hr.fer.rznu.restexample.utils.UserGenerator;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -15,9 +15,8 @@ public class UserRepo implements UserRepository {
     private Map<Integer, User> users;
 
     public UserRepo() {
-        users = new HashMap<>();
+        users = UserGenerator.generateUsers();
     }
-
 
     @Override
     public User getById(Integer id) {

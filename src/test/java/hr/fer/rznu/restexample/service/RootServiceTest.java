@@ -3,6 +3,7 @@ package hr.fer.rznu.restexample.service;
 import hr.fer.rznu.restexample.dto.LoginForm;
 import hr.fer.rznu.restexample.entity.User;
 import hr.fer.rznu.restexample.repository.UserRepository;
+import hr.fer.rznu.restexample.utils.UserGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -15,7 +16,7 @@ class RootServiceTest {
 
     @Test
     public void authenticateTest() {
-        User user = createUser();
+        User user = UserGenerator.createUser();
         LoginForm loginForm = createLoginForm();
         UserRepository repository = Mockito.mock(UserRepository.class);
 
@@ -28,7 +29,7 @@ class RootServiceTest {
 
     @Test
     public void authorizeTest() {
-        User user = createUser();
+        User user = UserGenerator.createUser();
         UserRepository repository = Mockito.mock(UserRepository.class);
         Mockito.when(repository.getById(1)).thenReturn(user);
 
@@ -38,7 +39,7 @@ class RootServiceTest {
 
     @Test
     public void isAdminTest() {
-        User admin = createAdmin();
+        User admin = UserGenerator.createAdmin();
         UserRepository repository = Mockito.mock(UserRepository.class);
         Mockito.when(repository.getByUsername("admin")).thenReturn(admin);
 
@@ -51,30 +52,6 @@ class RootServiceTest {
         loginForm.setUsername("kjezic");
         loginForm.setPassword("1234");
         return loginForm;
-    }
-
-    private static User createUser() {
-        User user = new User();
-        user.setFirstName("Karlo");
-        user.setLastName("Jezic");
-        user.setId(1);
-        user.setPassword("1234");
-        user.setUsername("kjezic");
-        user.setRole("user");
-        user.setUUID(UUID.randomUUID());
-        return user;
-    }
-
-    private static User createAdmin() {
-        User user = new User();
-        user.setFirstName("Admin");
-        user.setLastName("Admin");
-        user.setId(2);
-        user.setPassword("1234");
-        user.setUsername("admin");
-        user.setRole("admin");
-        user.setUUID(UUID.randomUUID());
-        return user;
     }
 
 }
