@@ -2,6 +2,7 @@ package hr.fer.rznu.restexample.controller;
 
 import hr.fer.rznu.restexample.dto.LoginResponse;
 import hr.fer.rznu.restexample.dto.RegisterForm;
+import hr.fer.rznu.restexample.dto.Response;
 import hr.fer.rznu.restexample.dto.UserDTO;
 import hr.fer.rznu.restexample.service.RootService;
 import hr.fer.rznu.restexample.service.UserService;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<UserDTO> profile(@NotNull @PathVariable("userId") Integer userId,
+    public ResponseEntity<Response<UserDTO>> profile(@NotNull @PathVariable("userId") Integer userId,
                                            @NotBlank String token) {
         if (!rootService.userExists(userId)) {
             return ResponseEntity.notFound().build();
@@ -34,11 +35,11 @@ public class UserController {
         if (!rootService.authorize(token, userId)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        return ResponseEntity.ok(userService.getUserById(userId));
+        return ResponseEntity.ok(new Response<>(userService.getUserById(userId)));
     }
 
     @GetMapping
-    public ResponseEntity<LoginResponse> login(@NotBlank String username,
+    public ResponseEntity<Response<LoginResponse>> login(@NotBlank String username,
                                                @NotBlank String password) {
         LoginResponse response = rootService.authenticate(username, password);
         if (response.getId() == null) {
@@ -47,15 +48,15 @@ public class UserController {
         if (response.getToken() == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new Response<>(response));
     }
 
     @PostMapping
-    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterForm registerForm) {
+    public ResponseEntity<Response<LoginResponse>> register(@Valid @RequestBody RegisterForm registerForm) {
         LoginResponse response = userService.register(registerForm);
         if (response.getId() == null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(response));
     }
 }
