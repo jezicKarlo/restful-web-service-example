@@ -32,7 +32,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void loginTresponseest() throws Exception {
+    public void loginTest() throws Exception {
         mockMvc.perform(get("/api/users")
                 .queryParam("username", "kjezic")
                 .queryParam("password", "123"))
