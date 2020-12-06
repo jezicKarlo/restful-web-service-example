@@ -40,8 +40,8 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").exists())
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.token").isNotEmpty())
-                .andExpect(jsonPath("$.id").isNotEmpty());
+                .andExpect(jsonPath("$.token").value("20aa0ab9-b698-4786-96f5-9f81302ef576"))
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
@@ -60,5 +60,20 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(GsonGenerator.getGson().toJson(registerForm)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getUserTest() throws Exception {
+        mockMvc.perform(get("/api/users/1")
+                .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.username").exists())
+                .andExpect(jsonPath("$.username").value("kjezic"))
+                .andExpect(jsonPath("$.firstName").exists())
+                .andExpect(jsonPath("$.firstName").value("Karlo"))
+                .andExpect(jsonPath("$.lastName").exists())
+                .andExpect(jsonPath("$.lastName").value("Jezic"));
     }
 }

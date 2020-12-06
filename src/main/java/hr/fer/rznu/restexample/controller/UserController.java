@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<UserDTO> getUser(@NotNull @PathVariable("userId") Integer userId,
+    public ResponseEntity<UserDTO> profile(@NotNull @PathVariable("userId") Integer userId,
                                            @NotBlank String token) {
         if (!rootService.userExists(userId)) {
             return ResponseEntity.notFound().build();
