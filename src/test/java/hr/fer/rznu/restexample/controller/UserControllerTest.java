@@ -3,7 +3,6 @@ package hr.fer.rznu.restexample.controller;
 import hr.fer.rznu.restexample.dto.RegisterForm;
 import hr.fer.rznu.restexample.utils.GsonGenerator;
 import hr.fer.rznu.restexample.utils.RegisterFormGenerator;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -63,7 +62,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void getUserTest() throws Exception {
+    public void profileTest() throws Exception {
         mockMvc.perform(get("/api/users/1")
                 .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
                 .andExpect(status().isOk())
