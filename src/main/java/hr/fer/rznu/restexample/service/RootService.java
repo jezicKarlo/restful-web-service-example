@@ -36,6 +36,15 @@ public class RootService {
         }
     }
 
+    public boolean authorize(String token, String username) {
+        try {
+            User user = repository.getByUsername(username);
+            return user.getToken().equals(token);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     public boolean isAdmin(String token) {
         try {
             User admin = repository.getByUsername("admin");

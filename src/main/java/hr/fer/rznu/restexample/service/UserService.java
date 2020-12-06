@@ -35,6 +35,14 @@ public class UserService {
         return loginResponse;
     }
 
+    public boolean deleteUser(Integer id) {
+        if (repository.getById(id) == null) {
+            return false;
+        }
+        repository.deleteById(id);
+        return true;
+    }
+
     private User createNewUser(RegisterForm registerForm) {
         User user = new User();
         user.setUsername(registerForm.getUsername());

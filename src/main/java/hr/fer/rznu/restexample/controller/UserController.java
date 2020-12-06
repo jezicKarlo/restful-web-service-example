@@ -59,4 +59,17 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(response));
     }
+
+    @DeleteMapping("{userId}")
+    public ResponseEntity<Response<String>> delete(@PathVariable("userId") Integer id,
+                                                   @NotBlank String token) {
+        if (!rootService.authorize(token, id)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        if (userService.deleteUser(id)) {
+            return ResponseEntity.ok(new Response<>("User deleted"));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>("User doesn't exist"));
+
+    }
 }

@@ -11,8 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,5 +75,16 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.data.firstName").value("Karlo"))
                 .andExpect(jsonPath("$.data.lastName").exists())
                 .andExpect(jsonPath("$.data.lastName").value("Jezic"));
+    }
+
+    @Test
+    public void deleteUserTest() throws Exception {
+        mockMvc.perform(delete("/api/users/1")
+                .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/users/1")
+                .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
+                .andExpect(status().isNotFound());
     }
 }

@@ -18,7 +18,7 @@ class UserServiceTest {
     @Test
     public void getUserByIdTest() {
         UserRepository repository = Mockito.mock(UserRepository.class);
-        Mockito.when(repository.getById(1)).thenReturn(UserGenerator.createUser());
+        Mockito.when(repository.getById(1)).thenReturn(UserGenerator.createKjezic());
 
         UserService service = new UserService(repository);
         UserDTO user = service.getUserById(1);
@@ -29,7 +29,7 @@ class UserServiceTest {
     public void registerTest() {
         UserRepository repository = Mockito.mock(UserRepository.class);
         Mockito.when(repository.getByUsername("kjezic")).thenReturn(null);
-        Mockito.when(repository.save(Mockito.any())).thenReturn(UserGenerator.createUser());
+        Mockito.when(repository.save(Mockito.any())).thenReturn(UserGenerator.createKjezic());
 
         UserService service = new UserService(repository);
         RegisterForm registerForm = RegisterFormGenerator.createRegisterForm();
@@ -41,7 +41,7 @@ class UserServiceTest {
     @Test
     public void registerTest_conflict() {
         UserRepository repository = Mockito.mock(UserRepository.class);
-        User user = UserGenerator.createUser();
+        User user = UserGenerator.createKjezic();
         Mockito.when(repository.getByUsername("kjezic")).thenReturn(user);
 
         UserService service = new UserService(repository);

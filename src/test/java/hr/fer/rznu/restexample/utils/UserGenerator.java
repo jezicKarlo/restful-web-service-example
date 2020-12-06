@@ -18,7 +18,7 @@ public class UserGenerator {
         return user;
     }
 
-    public static User createUser() {
+    public static User createKjezic() {
         User user = new User();
         user.setFirstName("Karlo");
         user.setLastName("Jezic");
@@ -27,6 +27,18 @@ public class UserGenerator {
         user.setUsername("kjezic");
         user.setRole("user");
         user.setToken("20aa0ab9-b698-4786-96f5-9f81302ef576");
+        return user;
+    }
+
+    public static User createJkenda() {
+        User user = new User();
+        user.setFirstName("Jurica");
+        user.setLastName("Kenda");
+        user.setId(1);
+        user.setPassword("1234");
+        user.setUsername("jkenda");
+        user.setRole("user");
+        user.setToken("b34528ac-434f-4367-90bb-45c5c2828074");
         return user;
     }
 }

@@ -7,15 +7,13 @@ import hr.fer.rznu.restexample.utils.UserGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class RootServiceTest {
 
     @Test
     public void authenticateTest() {
-        User user = UserGenerator.createUser();
+        User user = UserGenerator.createKjezic();
         UserRepository repository = Mockito.mock(UserRepository.class);
 
         Mockito.when(repository.getByUsername("kjezic")).thenReturn(user);
@@ -27,7 +25,7 @@ class RootServiceTest {
 
     @Test
     public void authorizeTest() {
-        User user = UserGenerator.createUser();
+        User user = UserGenerator.createKjezic();
         UserRepository repository = Mockito.mock(UserRepository.class);
         Mockito.when(repository.getById(1)).thenReturn(user);
 
@@ -47,12 +45,23 @@ class RootServiceTest {
 
     @Test
     public void userExistsTest() {
-        User user = UserGenerator.createUser();
+        User user = UserGenerator.createKjezic();
         UserRepository repository = Mockito.mock(UserRepository.class);
         Mockito.when(repository.getById(1)).thenReturn(user);
 
         RootService service = new RootService(repository);
         assertTrue(service.userExists(user.getId()));
         assertFalse(service.userExists(2));
+    }
+
+    @Test
+    public void authorizeTest_username_token() {
+        UserRepository repository = Mockito.mock(UserRepository.class);
+        Mockito.when(repository.getByUsername("kjezic")).thenReturn(UserGenerator.createKjezic());
+        Mockito.when(repository.getByUsername("jurica")).thenReturn(UserGenerator.createJkenda());
+
+        RootService service = new RootService(repository);
+        assertTrue(service.authorize("20aa0ab9-b698-4786-96f5-9f81302ef576", "kjezic"));
+        assertFalse(service.authorize("20aa0ab9-b698-4786-96f5-9f81302ef576", "jurica"));
     }
 }
