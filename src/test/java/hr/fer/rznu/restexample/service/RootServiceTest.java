@@ -1,80 +1,58 @@
 package hr.fer.rznu.restexample.service;
 
-import hr.fer.rznu.restexample.dto.LoginForm;
+import hr.fer.rznu.restexample.dto.LoginResponse;
 import hr.fer.rznu.restexample.entity.User;
 import hr.fer.rznu.restexample.repository.UserRepository;
+import hr.fer.rznu.restexample.utils.UserGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RootServiceTest {
 
     @Test
     public void authenticateTest() {
-        User user = createUser();
-        LoginForm loginForm = createLoginForm();
+        User user = UserGenerator.createUser();
         UserRepository repository = Mockito.mock(UserRepository.class);
 
         Mockito.when(repository.getByUsername("kjezic")).thenReturn(user);
 
         RootService service = new RootService(repository);
-        UUID uuid = service.authenticate(loginForm);
-        assertNotNull(uuid);
+        LoginResponse response = service.authenticate("kjezic", "123");
+        assertNotNull(response);
     }
 
     @Test
     public void authorizeTest() {
-        User user = createUser();
+        User user = UserGenerator.createUser();
         UserRepository repository = Mockito.mock(UserRepository.class);
         Mockito.when(repository.getById(1)).thenReturn(user);
 
         RootService service = new RootService(repository);
-        assertTrue(service.authorize(user.getUUID(), 1));
+        assertTrue(service.authorize(user.getToken(), 1));
     }
 
     @Test
     public void isAdminTest() {
-        User admin = createAdmin();
+        User admin = UserGenerator.createAdmin();
         UserRepository repository = Mockito.mock(UserRepository.class);
         Mockito.when(repository.getByUsername("admin")).thenReturn(admin);
 
         RootService service = new RootService(repository);
-        assertTrue(service.isAdmin(admin.getUUID()));
+        assertTrue(service.isAdmin(admin.getToken()));
     }
 
-    private LoginForm createLoginForm() {
-        LoginForm loginForm = new LoginForm();
-        loginForm.setUsername("kjezic");
-        loginForm.setPassword("1234");
-        return loginForm;
-    }
+    @Test
+    public void userExistsTest() {
+        User user = UserGenerator.createUser();
+        UserRepository repository = Mockito.mock(UserRepository.class);
+        Mockito.when(repository.getById(1)).thenReturn(user);
 
-    public User createAdmin() {
-        User user = new User();
-        user.setFirstName("Admin");
-        user.setLastName("Admin");
-        user.setId(2);
-        user.setPassword("1234");
-        user.setUsername("admin");
-        user.setRole("admin");
-        user.setUUID(UUID.randomUUID());
-        return user;
+        RootService service = new RootService(repository);
+        assertTrue(service.userExists(user.getId()));
+        assertFalse(service.userExists(2));
     }
-
-    public User createUser() {
-        User user = new User();
-        user.setFirstName("Karlo");
-        user.setLastName("Jezic");
-        user.setId(1);
-        user.setPassword("1234");
-        user.setUsername("kjezic");
-        user.setRole("user");
-        user.setUUID(UUID.randomUUID());
-        return user;
-    }
-
 }

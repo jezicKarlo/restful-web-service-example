@@ -4,24 +4,20 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.List;
-import java.util.UUID;
 
 @Data
 @Entity
 public class User {
 
-    private UUID UUID;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String token;
     private String username;
     private String firstName;
     private String lastName;
     private String password;
     private String role;
-    @OneToMany
-    private List<Note> notes;
 }

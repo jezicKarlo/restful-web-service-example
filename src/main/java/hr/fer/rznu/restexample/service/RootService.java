@@ -1,11 +1,9 @@
 package hr.fer.rznu.restexample.service;
 
-import hr.fer.rznu.restexample.dto.LoginForm;
+import hr.fer.rznu.restexample.dto.LoginResponse;
 import hr.fer.rznu.restexample.entity.User;
 import hr.fer.rznu.restexample.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class RootService {
@@ -16,24 +14,38 @@ public class RootService {
         this.repository = repository;
     }
 
-    public UUID authenticate(LoginForm loginForm) {
-        User user = repository.getByUsername(loginForm.getUsername());
+    public LoginResponse authenticate(String username, String password) {
+        User user = repository.getByUsername(username);
+        LoginResponse response = new LoginResponse();
         if (user == null) {
-            return null;
+            return response;
         }
-        if (user.getPassword().equals(loginForm.getPassword())) {
-            return user.getUUID();
+        response.setId(user.getId());
+        if (user.getPassword().equals(password)) {
+            response.setToken(user.getToken());
         }
-        return null;
+        return response;
     }
 
-    public boolean authorize(UUID uuid, Integer id) {
-        User user = repository.getById(id);
-        return user.getUUID() == uuid;
+    public boolean authorize(String token, Integer id) {
+        try {
+            User user = repository.getById(id);
+            return user.getToken().equals(token);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
-    public boolean isAdmin(UUID uuid) {
-        User admin = repository.getByUsername("admin");
-        return admin.getUUID() == uuid;
+    public boolean isAdmin(String token) {
+        try {
+            User admin = repository.getByUsername("admin");
+            return admin.getToken().equals(token);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return false;
+        }
+    }
+
+    public boolean userExists(Integer id) {
+        return repository.getById(id) != null;
     }
 }
