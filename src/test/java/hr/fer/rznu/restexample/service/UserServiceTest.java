@@ -5,13 +5,13 @@ import hr.fer.rznu.restexample.dto.RegisterForm;
 import hr.fer.rznu.restexample.dto.UserDTO;
 import hr.fer.rznu.restexample.entity.User;
 import hr.fer.rznu.restexample.repository.UserRepository;
+import hr.fer.rznu.restexample.utils.RegisterFormGenerator;
 import hr.fer.rznu.restexample.utils.UserGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class UserServiceTest {
 
@@ -28,11 +28,11 @@ class UserServiceTest {
     @Test
     public void registerTest() {
         UserRepository repository = Mockito.mock(UserRepository.class);
-        User user = UserGenerator.createUser();
-        Mockito.when(repository.save(Mockito.any())).thenReturn(user);
+        Mockito.when(repository.getByUsername("kjezic")).thenReturn(null);
+        Mockito.when(repository.save(Mockito.any())).thenReturn(UserGenerator.createUser());
 
         UserService service = new UserService(repository);
-        RegisterForm registerForm = createRegisterForm();
+        RegisterForm registerForm = RegisterFormGenerator.createRegisterForm();
         LoginResponse response = service.register(registerForm);
         assertEquals(1, response.getId());
         assertEquals("20aa0ab9-b698-4786-96f5-9f81302ef576", response.getToken());
@@ -45,18 +45,9 @@ class UserServiceTest {
         Mockito.when(repository.getByUsername("kjezic")).thenReturn(user);
 
         UserService service = new UserService(repository);
-        RegisterForm registerForm = createRegisterForm();
+        RegisterForm registerForm = RegisterFormGenerator.createRegisterForm();
         LoginResponse response = service.register(registerForm);
         assertNull(response.getToken());
-    }
-
-    private RegisterForm createRegisterForm() {
-        RegisterForm registerForm = new RegisterForm();
-        registerForm.setFirstName("Karlo");
-        registerForm.setLastName("Jezic");
-        registerForm.setPassword("123");
-        registerForm.setUsername("kjezic");
-        return registerForm;
     }
 
 }
