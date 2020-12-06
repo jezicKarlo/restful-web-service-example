@@ -2,7 +2,7 @@ package hr.fer.rznu.restexample.service;
 
 import hr.fer.rznu.restexample.dto.LoginResponse;
 import hr.fer.rznu.restexample.dto.RegisterForm;
-import hr.fer.rznu.restexample.dto.UserDTO;
+import hr.fer.rznu.restexample.dto.UserDetails;
 import hr.fer.rznu.restexample.entity.User;
 import hr.fer.rznu.restexample.repository.UserRepository;
 import hr.fer.rznu.restexample.utils.RegisterFormGenerator;
@@ -21,7 +21,7 @@ class UserServiceTest {
         Mockito.when(repository.getById(1)).thenReturn(UserGenerator.createKjezic());
 
         UserService service = new UserService(repository);
-        UserDTO user = service.getUserById(1);
+        UserDetails user = service.getUserById(1);
         assertEquals("kjezic", user.getUsername());
     }
 

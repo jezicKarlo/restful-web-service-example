@@ -2,11 +2,13 @@ package hr.fer.rznu.restexample.service;
 
 import hr.fer.rznu.restexample.dto.LoginResponse;
 import hr.fer.rznu.restexample.dto.RegisterForm;
-import hr.fer.rznu.restexample.dto.UserDTO;
+import hr.fer.rznu.restexample.dto.UserDetails;
 import hr.fer.rznu.restexample.entity.User;
 import hr.fer.rznu.restexample.repository.UserRepository;
+import hr.fer.rznu.restexample.request.EditUser;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -18,9 +20,12 @@ public class UserService {
         this.repository = repository;
     }
 
-    public UserDTO getUserById(Integer id) {
+    public UserDetails getUserById(Integer id) {
         User user = repository.getById(id);
-        return new UserDTO(user);
+        if (user == null) {
+            return null;
+        }
+        return new UserDetails(user);
     }
 
     public LoginResponse register(RegisterForm registerForm) {
@@ -36,11 +41,22 @@ public class UserService {
     }
 
     public boolean deleteUser(Integer id) {
-        if (repository.getById(id) == null) {
+        Optional<User> user = repository.findById(id);
+        if (user.isEmpty()) {
             return false;
         }
         repository.deleteById(id);
         return true;
+    }
+
+    public UserDetails editUser(EditUser edit, Integer id) {
+        Optional<User> user = repository.findById(id);
+        if (user.isEmpty()) {
+            return null;
+        }
+        User userToEdit = user.get();
+        userToEdit.edit(edit);
+        return new UserDetails(repository.save(userToEdit));
     }
 
     private User createNewUser(RegisterForm registerForm) {

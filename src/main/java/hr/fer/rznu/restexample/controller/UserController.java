@@ -3,7 +3,8 @@ package hr.fer.rznu.restexample.controller;
 import hr.fer.rznu.restexample.dto.LoginResponse;
 import hr.fer.rznu.restexample.dto.RegisterForm;
 import hr.fer.rznu.restexample.dto.Response;
-import hr.fer.rznu.restexample.dto.UserDTO;
+import hr.fer.rznu.restexample.dto.UserDetails;
+import hr.fer.rznu.restexample.request.EditUser;
 import hr.fer.rznu.restexample.service.RootService;
 import hr.fer.rznu.restexample.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,8 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<Response<UserDTO>> profile(@NotNull @PathVariable("userId") Integer userId,
-                                           @NotBlank String token) {
+    public ResponseEntity<Response<UserDetails>> profile(@NotNull @PathVariable("userId") Integer userId,
+                                                         @NotBlank String token) {
         if (!rootService.userExists(userId)) {
             return ResponseEntity.notFound().build();
         }
@@ -70,6 +71,18 @@ public class UserController {
             return ResponseEntity.ok(new Response<>("User deleted"));
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>("User doesn't exist"));
+    }
 
+    @PutMapping("{userId}")
+    public ResponseEntity<Response<UserDetails>> edit(@PathVariable("userId") Integer id,
+                                                      @Valid @RequestBody EditUser edit,
+                                                      @NotBlank String token) {
+
+        if (rootService.authorize(token, id)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        UserDetails details = userService.editUser(edit, id);
+        return ResponseEntity.ok(new Response<>(details));
     }
 }

@@ -1,5 +1,6 @@
 package hr.fer.rznu.restexample.entity;
 
+import hr.fer.rznu.restexample.request.EditUser;
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -20,4 +21,10 @@ public class User {
     private String lastName;
     private String password;
     private String role;
+
+    public void edit(EditUser editUser) {
+        username = editUser.getUsername();
+        firstName = editUser.getFirstName();
+        lastName = editUser.getLastName();
+    }
 }
