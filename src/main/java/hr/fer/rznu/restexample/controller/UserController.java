@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @RestController
@@ -25,7 +27,8 @@ public class UserController {
     }
 
     @GetMapping("{userId}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable("userId") Integer userId, String token) {
+    public ResponseEntity<UserDTO> getUser(@NotNull @PathVariable("userId") Integer userId,
+                                           @NotBlank String token) {
         if (!rootService.userExists(userId)) {
             return ResponseEntity.notFound().build();
         }
@@ -36,7 +39,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<LoginResponse> login(String username, String password) {
+    public ResponseEntity<LoginResponse> login(@NotBlank String username,
+                                               @NotBlank String password) {
         LoginResponse response = rootService.authenticate(username, password);
         if (response.getId() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
