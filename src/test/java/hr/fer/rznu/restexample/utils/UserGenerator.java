@@ -26,7 +26,7 @@ public class UserGenerator {
         user.setPassword("1234");
         user.setUsername("kjezic");
         user.setRole("user");
-        user.setToken(UUID.randomUUID().toString());
+        user.setToken("20aa0ab9-b698-4786-96f5-9f81302ef576");
         return user;
     }
 }

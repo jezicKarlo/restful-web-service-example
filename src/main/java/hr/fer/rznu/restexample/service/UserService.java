@@ -1,5 +1,6 @@
 package hr.fer.rznu.restexample.service;
 
+import hr.fer.rznu.restexample.dto.LoginResponse;
 import hr.fer.rznu.restexample.dto.RegisterForm;
 import hr.fer.rznu.restexample.dto.UserDTO;
 import hr.fer.rznu.restexample.entity.User;
@@ -22,9 +23,16 @@ public class UserService {
         return new UserDTO(user);
     }
 
-    public UUID register(RegisterForm registerForm) {
+    public LoginResponse register(RegisterForm registerForm) {
+        User user = repository.getByUsername(registerForm.getUsername());
+        LoginResponse loginResponse = new LoginResponse();
+        if (user != null) {
+            return loginResponse;
+        }
         User save = repository.save(createNewUser(registerForm));
-        return UUID.fromString(save.getToken());
+        loginResponse.setId(save.getId());
+        loginResponse.setToken(save.getToken());
+        return loginResponse;
     }
 
     private User createNewUser(RegisterForm registerForm) {

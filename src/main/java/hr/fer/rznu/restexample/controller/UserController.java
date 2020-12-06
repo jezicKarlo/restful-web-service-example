@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.UUID;
 
 @RestController
@@ -47,11 +48,11 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UUID> register(@RequestBody RegisterForm registerForm) {
-        UUID token = userService.register(registerForm);
-        if (token == null) {
-            return ResponseEntity.badRequest().body(null);
+    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterForm registerForm) {
+        LoginResponse response = userService.register(registerForm);
+        if (response.getId() == null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(token);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
