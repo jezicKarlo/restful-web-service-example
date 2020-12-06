@@ -1,5 +1,5 @@
 /users
-GET -> login (if admin get all users)
+GET -> login
 POST -> register
 
 /users/{userId}
