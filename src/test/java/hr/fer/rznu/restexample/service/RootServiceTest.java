@@ -7,6 +7,8 @@ import hr.fer.rznu.restexample.utils.UserGenerator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class RootServiceTest {
@@ -16,7 +18,7 @@ class RootServiceTest {
         User user = UserGenerator.createKjezic();
         UserRepository repository = Mockito.mock(UserRepository.class);
 
-        Mockito.when(repository.getByUsername("kjezic")).thenReturn(user);
+        Mockito.when(repository.findByUsername("kjezic")).thenReturn(Optional.of(user));
 
         RootService service = new RootService(repository);
         LoginResponse response = service.authenticate("kjezic", "1234");
@@ -27,7 +29,7 @@ class RootServiceTest {
     public void authorizeTest() {
         User user = UserGenerator.createKjezic();
         UserRepository repository = Mockito.mock(UserRepository.class);
-        Mockito.when(repository.getById(1)).thenReturn(user);
+        Mockito.when(repository.findById(1)).thenReturn(Optional.of(user));
 
         RootService service = new RootService(repository);
         assertTrue(service.authorize(user.getToken(), 1));
@@ -37,7 +39,7 @@ class RootServiceTest {
     public void isAdminTest() {
         User admin = UserGenerator.createAdmin();
         UserRepository repository = Mockito.mock(UserRepository.class);
-        Mockito.when(repository.getByUsername("admin")).thenReturn(admin);
+        Mockito.when(repository.findByUsername("admin")).thenReturn(Optional.of(admin));
 
         RootService service = new RootService(repository);
         assertTrue(service.isAdmin(admin.getToken()));
@@ -47,7 +49,7 @@ class RootServiceTest {
     public void userExistsTest() {
         User user = UserGenerator.createKjezic();
         UserRepository repository = Mockito.mock(UserRepository.class);
-        Mockito.when(repository.getById(1)).thenReturn(user);
+        Mockito.when(repository.findById(1)).thenReturn(Optional.of(user));
 
         RootService service = new RootService(repository);
         assertTrue(service.userExists(user.getId()));
@@ -57,8 +59,8 @@ class RootServiceTest {
     @Test
     public void authorizeTest_username_token() {
         UserRepository repository = Mockito.mock(UserRepository.class);
-        Mockito.when(repository.getByUsername("kjezic")).thenReturn(UserGenerator.createKjezic());
-        Mockito.when(repository.getByUsername("jurica")).thenReturn(UserGenerator.createJkenda());
+        Mockito.when(repository.findByUsername("kjezic")).thenReturn(Optional.of(UserGenerator.createKjezic()));
+        Mockito.when(repository.findByUsername("jurica")).thenReturn(Optional.of(UserGenerator.createJkenda()));
 
         RootService service = new RootService(repository);
         assertTrue(service.authorize("20aa0ab9-b698-4786-96f5-9f81302ef576", "kjezic"));
@@ -68,7 +70,7 @@ class RootServiceTest {
     @Test
     public void userExistsTest_username() {
         UserRepository repository = Mockito.mock(UserRepository.class);
-        Mockito.when(repository.getByUsername("kjezic")).thenReturn(UserGenerator.createKjezic());
+        Mockito.when(repository.findByUsername("kjezic")).thenReturn(Optional.of(UserGenerator.createKjezic()));
 
         RootService service = new RootService(repository);
         assertTrue(service.userExists("kjezic"));
@@ -77,7 +79,7 @@ class RootServiceTest {
     @Test
     public void userExistsTest_username_false() {
         UserRepository repository = Mockito.mock(UserRepository.class);
-        Mockito.when(repository.getByUsername("kjezic")).thenReturn(null);
+        Mockito.when(repository.findByUsername("kjezic")).thenReturn(Optional.empty());
 
         RootService service = new RootService(repository);
         assertFalse(service.userExists("kjezic"));
