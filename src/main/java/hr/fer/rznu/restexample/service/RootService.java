@@ -6,6 +6,8 @@ import hr.fer.rznu.restexample.entity.User;
 import hr.fer.rznu.restexample.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class RootService {
 
@@ -16,36 +18,48 @@ public class RootService {
     }
 
     public LoginResponse authenticate(String username, String password) {
-        User user = repository.getByUsername(username);
-        if (user.getPassword().equals(password)) {
+        Optional<User> user = repository.findByUsername(username);
+        if (user.isEmpty()) {
+            return null;
+        }
+        if (user.get().getPassword().equals(password)) {
             LoginResponse response = new LoginResponse();
-            response.setId(user.getId());
-            response.setToken(user.getToken());
+            response.setId(user.get().getId());
+            response.setToken(user.get().getToken());
             return response;
         }
         return null;
     }
 
     public boolean authorize(String token, Integer id) {
-            User user = repository.getById(id);
-            return user.getToken().equals(token);
+        Optional<User> user = repository.findById(id);
+        if (user.isEmpty()) {
+            return false;
+        }
+        return user.get().getToken().equals(token);
     }
 
     public boolean authorize(String token, String username) {
-        User user = repository.getByUsername(username);
-        return user.getToken().equals(token);
+        Optional<User> user = repository.findByUsername(username);
+        if (user.isEmpty()) {
+            return false;
+        }
+        return user.get().getToken().equals(token);
     }
 
     public boolean isAdmin(String token) {
-        User admin = repository.getByUsername("admin");
-        return admin.getToken().equals(token);
+        Optional<User> admin = repository.findByUsername("admin");
+        if (admin.isEmpty()) {
+            return false;
+        }
+        return admin.get().getToken().equals(token);
     }
 
     public boolean userExists(Integer id) {
-        return repository.getById(id) != null;
+        return repository.findById(id).isPresent();
     }
 
     public boolean userExists(String username) {
-        return repository.getByUsername(username) != null;
+        return repository.findByUsername(username).isPresent();
     }
 }

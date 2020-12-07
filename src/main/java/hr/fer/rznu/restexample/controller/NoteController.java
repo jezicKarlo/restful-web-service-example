@@ -33,6 +33,10 @@ public class NoteController {
         if (!rootService.userExists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return null;
+        List<Note> notes = noteService.getNotes(token, id);
+        if (notes == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        return ResponseEntity.ok(new Response<>(notes));
     }
 }
