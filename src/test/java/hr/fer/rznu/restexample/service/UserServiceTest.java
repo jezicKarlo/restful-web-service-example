@@ -15,16 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class UserServiceTest {
 
     @Test
-    public void getUserByIdTest() {
-        UserRepository repository = Mockito.mock(UserRepository.class);
-        Mockito.when(repository.getById(1)).thenReturn(UserGenerator.createKjezic());
-
-        UserService service = new UserService(repository);
-        UserDetails user = service.getUserById(1);
-        assertEquals("kjezic", user.getUsername());
-    }
-
-    @Test
     public void registerTest() {
         UserRepository repository = Mockito.mock(UserRepository.class);
         Mockito.when(repository.getByUsername("kjezic")).thenReturn(null);

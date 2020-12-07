@@ -30,7 +30,7 @@ class RootServiceTest {
         Mockito.when(repository.getById(1)).thenReturn(user);
 
         RootService service = new RootService(repository);
-        assertTrue(service.authorize(user.getToken(), 1));
+        assertNotNull(service.authorize(user.getToken(), 1));
     }
 
     @Test

@@ -20,14 +20,6 @@ public class UserService {
         this.repository = repository;
     }
 
-    public UserDetails getUserById(Integer id) {
-        User user = repository.getById(id);
-        if (user == null) {
-            return null;
-        }
-        return new UserDetails(user);
-    }
-
     public LoginResponse register(RegisterForm registerForm) {
         LoginResponse loginResponse = new LoginResponse();
         User save = repository.save(createNewUser(registerForm));

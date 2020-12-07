@@ -1,6 +1,7 @@
 package hr.fer.rznu.restexample.service;
 
 import hr.fer.rznu.restexample.dto.LoginResponse;
+import hr.fer.rznu.restexample.dto.UserDetails;
 import hr.fer.rznu.restexample.entity.User;
 import hr.fer.rznu.restexample.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,12 @@ public class RootService {
         return null;
     }
 
-    public boolean authorize(String token, Integer id) {
+    public UserDetails authorize(String token, Integer id) {
             User user = repository.getById(id);
-            return user.getToken().equals(token);
+            if (user.getToken().equals(token)) {
+                return new UserDetails(user);
+            }
+            return null;
     }
 
     public boolean authorize(String token, String username) {

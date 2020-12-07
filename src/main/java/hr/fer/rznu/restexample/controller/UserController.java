@@ -33,10 +33,11 @@ public class UserController {
         if (!rootService.userExists(userId)) {
             return ResponseEntity.notFound().build();
         }
-        if (!rootService.authorize(token, userId)) {
+        UserDetails userDetails = rootService.authorize(token, userId);
+        if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        return ResponseEntity.ok(new Response<>(userService.getUserById(userId)));
+        return ResponseEntity.ok(new Response<>(userDetails));
     }
 
     @GetMapping
@@ -68,7 +69,8 @@ public class UserController {
         if (!rootService.userExists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>("User doesn't exist"));
         }
-        if (!rootService.authorize(token, id)) {
+        UserDetails userDetails = rootService.authorize(token, id);
+        if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response<>("Unauthorized"));
         }
         userService.deleteUser(id);
@@ -83,7 +85,8 @@ public class UserController {
         if (!rootService.userExists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        if (!rootService.authorize(token, id)) {
+        UserDetails userDetails = rootService.authorize(token, id);
+        if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         UserDetails edited = userService.editUser(edit, id);
