@@ -3,10 +3,8 @@ package hr.fer.rznu.restexample.entity;
 import hr.fer.rznu.restexample.request.EditUser;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,6 +19,8 @@ public class User {
     private String lastName;
     private String password;
     private String role;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Note> notes;
 
     public void edit(EditUser editUser) {
         username = editUser.getUsername();
