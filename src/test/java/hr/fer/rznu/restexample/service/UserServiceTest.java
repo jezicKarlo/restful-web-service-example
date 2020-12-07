@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class UserServiceTest {
 
@@ -39,15 +38,14 @@ class UserServiceTest {
     }
 
     @Test
-    public void registerTest_conflict() {
+    public void editTest() {
         UserRepository repository = Mockito.mock(UserRepository.class);
-        User user = UserGenerator.createKjezic();
-        Mockito.when(repository.getByUsername("kjezic")).thenReturn(user);
+        User kjezic = UserGenerator.createKjezic();
+        Mockito.when(repository.getById(1)).thenReturn(kjezic);
+        Mockito.when(repository.save(kjezic)).thenReturn(kjezic);
 
-        UserService service = new UserService(repository);
-        RegisterForm registerForm = RegisterFormGenerator.createRegisterForm();
-        LoginResponse response = service.register(registerForm);
-        assertNull(response.getToken());
+        UserService userService = new UserService(repository);
+        UserDetails edited = userService.editUser(UserGenerator.createKjezic_toEdit(), 1);
+        assertEquals("karlo.jezic", edited.getUsername());
     }
-
 }

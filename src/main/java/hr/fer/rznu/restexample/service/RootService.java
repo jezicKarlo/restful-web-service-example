@@ -16,45 +16,35 @@ public class RootService {
 
     public LoginResponse authenticate(String username, String password) {
         User user = repository.getByUsername(username);
-        LoginResponse response = new LoginResponse();
-        if (user == null) {
+        if (user.getPassword().equals(password)) {
+            LoginResponse response = new LoginResponse();
+            response.setId(user.getId());
+            response.setToken(user.getToken());
             return response;
         }
-        response.setId(user.getId());
-        if (user.getPassword().equals(password)) {
-            response.setToken(user.getToken());
-        }
-        return response;
+        return null;
     }
 
     public boolean authorize(String token, Integer id) {
-        try {
             User user = repository.getById(id);
             return user.getToken().equals(token);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
     }
 
     public boolean authorize(String token, String username) {
-        try {
-            User user = repository.getByUsername(username);
-            return user.getToken().equals(token);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
+        User user = repository.getByUsername(username);
+        return user.getToken().equals(token);
     }
 
     public boolean isAdmin(String token) {
-        try {
-            User admin = repository.getByUsername("admin");
-            return admin.getToken().equals(token);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            return false;
-        }
+        User admin = repository.getByUsername("admin");
+        return admin.getToken().equals(token);
     }
 
     public boolean userExists(Integer id) {
         return repository.getById(id) != null;
+    }
+
+    public boolean userExists(String username) {
+        return repository.getByUsername(username) != null;
     }
 }

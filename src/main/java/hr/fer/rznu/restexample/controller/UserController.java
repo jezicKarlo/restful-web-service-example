@@ -41,12 +41,13 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Response<LoginResponse>> login(@NotBlank String username,
-                                               @NotBlank String password) {
-        LoginResponse response = rootService.authenticate(username, password);
-        if (response.getId() == null) {
+                                                         @NotBlank String password) {
+
+        if (!rootService.userExists(username)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        if (response.getToken() == null) {
+        LoginResponse response = rootService.authenticate(username, password);
+        if (response == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
         return ResponseEntity.ok(new Response<>(response));
@@ -54,23 +55,24 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<Response<LoginResponse>> register(@Valid @RequestBody RegisterForm registerForm) {
-        LoginResponse response = userService.register(registerForm);
-        if (response.getId() == null) {
+        if (rootService.userExists(registerForm.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
+        LoginResponse response = userService.register(registerForm);
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(response));
     }
 
     @DeleteMapping("{userId}")
     public ResponseEntity<Response<String>> delete(@PathVariable("userId") Integer id,
                                                    @NotBlank String token) {
+        if (!rootService.userExists(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>("User doesn't exist"));
+        }
         if (!rootService.authorize(token, id)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response<>("Unauthorized"));
         }
-        if (userService.deleteUser(id)) {
-            return ResponseEntity.ok(new Response<>("User deleted"));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>("User doesn't exist"));
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new Response<>("User deleted"));
     }
 
     @PutMapping("{userId}")
@@ -78,11 +80,13 @@ public class UserController {
                                                       @Valid @RequestBody EditUser edit,
                                                       @NotBlank String token) {
 
-        if (rootService.authorize(token, id)) {
+        if (!rootService.userExists(id)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        if (!rootService.authorize(token, id)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-
-        UserDetails details = userService.editUser(edit, id);
-        return ResponseEntity.ok(new Response<>(details));
+        UserDetails edited = userService.editUser(edit, id);
+        return ResponseEntity.ok(new Response<>(edited));
     }
 }

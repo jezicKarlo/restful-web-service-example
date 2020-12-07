@@ -29,34 +29,21 @@ public class UserService {
     }
 
     public LoginResponse register(RegisterForm registerForm) {
-        User user = repository.getByUsername(registerForm.getUsername());
         LoginResponse loginResponse = new LoginResponse();
-        if (user != null) {
-            return loginResponse;
-        }
         User save = repository.save(createNewUser(registerForm));
         loginResponse.setId(save.getId());
         loginResponse.setToken(save.getToken());
         return loginResponse;
     }
 
-    public boolean deleteUser(Integer id) {
-        Optional<User> user = repository.findById(id);
-        if (user.isEmpty()) {
-            return false;
-        }
+    public void deleteUser(Integer id) {
         repository.deleteById(id);
-        return true;
     }
 
     public UserDetails editUser(EditUser edit, Integer id) {
-        Optional<User> user = repository.findById(id);
-        if (user.isEmpty()) {
-            return null;
-        }
-        User userToEdit = user.get();
-        userToEdit.edit(edit);
-        return new UserDetails(repository.save(userToEdit));
+        User user = repository.getById(id);
+        user.edit(edit);
+        return new UserDetails(repository.save(user));
     }
 
     private User createNewUser(RegisterForm registerForm) {

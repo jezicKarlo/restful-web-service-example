@@ -3,6 +3,7 @@ package hr.fer.rznu.restexample.controller;
 import hr.fer.rznu.restexample.dto.RegisterForm;
 import hr.fer.rznu.restexample.utils.GsonGenerator;
 import hr.fer.rznu.restexample.utils.RegisterFormGenerator;
+import hr.fer.rznu.restexample.utils.UserGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -34,7 +35,7 @@ class UserControllerTest {
     public void loginTest() throws Exception {
         mockMvc.perform(get("/api/users")
                 .queryParam("username", "kjezic")
-                .queryParam("password", "123"))
+                .queryParam("password", "1234"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data..token").exists())
@@ -86,5 +87,24 @@ class UserControllerTest {
         mockMvc.perform(get("/api/users/1")
                 .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void editUser() throws Exception {
+        mockMvc.perform(get("/api/users/1")
+                .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.username").exists())
+                .andExpect(jsonPath("$.data.username").value("kjezic"));
+
+        mockMvc.perform(put("/api/users/1")
+                .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(GsonGenerator.getGson().toJson(UserGenerator.createKjezic_toEdit())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.username").exists())
+                .andExpect(jsonPath("$.data.username").value("karlo.jezic"));
     }
 }

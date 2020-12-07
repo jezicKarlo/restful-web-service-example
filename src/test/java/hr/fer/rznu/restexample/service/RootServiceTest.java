@@ -19,7 +19,7 @@ class RootServiceTest {
         Mockito.when(repository.getByUsername("kjezic")).thenReturn(user);
 
         RootService service = new RootService(repository);
-        LoginResponse response = service.authenticate("kjezic", "123");
+        LoginResponse response = service.authenticate("kjezic", "1234");
         assertNotNull(response);
     }
 
@@ -63,5 +63,23 @@ class RootServiceTest {
         RootService service = new RootService(repository);
         assertTrue(service.authorize("20aa0ab9-b698-4786-96f5-9f81302ef576", "kjezic"));
         assertFalse(service.authorize("20aa0ab9-b698-4786-96f5-9f81302ef576", "jurica"));
+    }
+
+    @Test
+    public void userExistsTest_username() {
+        UserRepository repository = Mockito.mock(UserRepository.class);
+        Mockito.when(repository.getByUsername("kjezic")).thenReturn(UserGenerator.createKjezic());
+
+        RootService service = new RootService(repository);
+        assertTrue(service.userExists("kjezic"));
+    }
+
+    @Test
+    public void userExistsTest_username_false() {
+        UserRepository repository = Mockito.mock(UserRepository.class);
+        Mockito.when(repository.getByUsername("kjezic")).thenReturn(null);
+
+        RootService service = new RootService(repository);
+        assertFalse(service.userExists("kjezic"));
     }
 }
