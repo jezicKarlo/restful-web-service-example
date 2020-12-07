@@ -26,12 +26,9 @@ public class RootService {
         return null;
     }
 
-    public UserDetails authorize(String token, Integer id) {
+    public boolean authorize(String token, Integer id) {
             User user = repository.getById(id);
-            if (user.getToken().equals(token)) {
-                return new UserDetails(user);
-            }
-            return null;
+            return user.getToken().equals(token);
     }
 
     public boolean authorize(String token, String username) {

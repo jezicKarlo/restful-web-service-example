@@ -27,13 +27,13 @@ public class UserController {
         this.rootService = rootService;
     }
 
-    @GetMapping("{userId}")
-    public ResponseEntity<Response<UserDetails>> profile(@NotNull @PathVariable("userId") Integer userId,
+    @GetMapping("{id}")
+    public ResponseEntity<Response<UserDetails>> profile(@NotNull @PathVariable("id") Integer id,
                                                          @NotBlank String token) {
-        if (!rootService.userExists(userId)) {
+        if (!rootService.userExists(id)) {
             return ResponseEntity.notFound().build();
         }
-        UserDetails userDetails = rootService.authorize(token, userId);
+        UserDetails userDetails = userService.getUser(id, token);
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
@@ -63,13 +63,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(response));
     }
 
-    @DeleteMapping("{userId}")
-    public ResponseEntity<Response<String>> delete(@PathVariable("userId") Integer id,
+    @DeleteMapping("{id}")
+    public ResponseEntity<Response<String>> delete(@PathVariable("id") Integer id,
                                                    @NotBlank String token) {
         if (!rootService.userExists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>("User doesn't exist"));
         }
-        UserDetails userDetails = rootService.authorize(token, id);
+        UserDetails userDetails = userService.getUser(id, token);
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response<>("Unauthorized"));
         }
@@ -77,19 +77,18 @@ public class UserController {
         return ResponseEntity.ok(new Response<>("User deleted"));
     }
 
-    @PutMapping("{userId}")
-    public ResponseEntity<Response<UserDetails>> edit(@PathVariable("userId") Integer id,
+    @PutMapping("{id}")
+    public ResponseEntity<Response<UserDetails>> edit(@PathVariable("id") Integer id,
                                                       @Valid @RequestBody EditUser edit,
                                                       @NotBlank String token) {
 
         if (!rootService.userExists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        UserDetails userDetails = rootService.authorize(token, id);
-        if (userDetails == null) {
+        UserDetails edited = userService.editUser(edit, id, token);
+        if (edited == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        UserDetails edited = userService.editUser(edit, id);
         return ResponseEntity.ok(new Response<>(edited));
     }
 }

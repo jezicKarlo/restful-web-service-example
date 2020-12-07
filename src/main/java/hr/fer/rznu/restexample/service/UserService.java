@@ -8,16 +8,17 @@ import hr.fer.rznu.restexample.repository.UserRepository;
 import hr.fer.rznu.restexample.request.EditUser;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService {
 
     private final UserRepository repository;
+    private final RootService rootService;
 
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, RootService rootService) {
         this.repository = repository;
+        this.rootService = rootService;
     }
 
     public LoginResponse register(RegisterForm registerForm) {
@@ -32,10 +33,13 @@ public class UserService {
         repository.deleteById(id);
     }
 
-    public UserDetails editUser(EditUser edit, Integer id) {
-        User user = repository.getById(id);
-        user.edit(edit);
-        return new UserDetails(repository.save(user));
+    public UserDetails editUser(EditUser edit, Integer id, String token) {
+        if (rootService.authorize(token, id)) {
+            User user = repository.getById(id);
+            user.edit(edit);
+            return new UserDetails(repository.save(user));
+        }
+        return null;
     }
 
     private User createNewUser(RegisterForm registerForm) {
@@ -47,6 +51,14 @@ public class UserService {
         user.setRole("user");
         user.setToken(UUID.randomUUID().toString());
         return user;
+    }
+
+    public UserDetails getUser(Integer id, String token) {
+        if (rootService.authorize(token, id)) {
+            User user = repository.getById(id);
+            return new UserDetails(user);
+        }
+        return null;
     }
 
 }

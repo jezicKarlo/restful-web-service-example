@@ -10,7 +10,7 @@ public class RegisterFormGenerator {
         RegisterForm registerForm = new RegisterForm();
         registerForm.setFirstName("Karlo");
         registerForm.setLastName("Jezic");
-        registerForm.setPassword("123");
+        registerForm.setPassword("1234");
         registerForm.setUsername("kjezic");
         return registerForm;
     }
