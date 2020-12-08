@@ -59,4 +59,9 @@ public class NoteService {
         Note saved = repository.save(noteToEdit);
         return new NoteDTO(saved);
     }
+
+    public void deleteNote(Integer id) {
+        Note note = repository.getById(id);
+        repository.delete(note);
+    }
 }

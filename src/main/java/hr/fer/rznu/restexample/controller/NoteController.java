@@ -4,7 +4,6 @@ import hr.fer.rznu.restexample.dto.NoteBody;
 import hr.fer.rznu.restexample.dto.NoteDTO;
 import hr.fer.rznu.restexample.dto.Response;
 import hr.fer.rznu.restexample.dto.UserNotes;
-import hr.fer.rznu.restexample.entity.Note;
 import hr.fer.rznu.restexample.service.NoteService;
 import hr.fer.rznu.restexample.service.RootService;
 import org.springframework.http.HttpStatus;
@@ -61,9 +60,9 @@ public class NoteController {
                                                      @PathVariable("noteId") Integer noteId,
                                                      @NotBlank String token) {
 
-        ResponseEntity<Response<NoteDTO>> check = check(userId, token, noteId);
-        if (check != null) {
-            return check;
+        HttpStatus status = status(userId, token, noteId);
+        if (status != null) {
+            return ResponseEntity.status(status).body(null);
         }
         NoteDTO note = noteService.getNote(noteId);
         return ResponseEntity.ok(new Response<>(note));
@@ -75,23 +74,36 @@ public class NoteController {
                                                       @Valid @RequestBody NoteBody edit,
                                                       @NotBlank String token) {
 
-        ResponseEntity<Response<NoteDTO>> check = check(userId, token, noteId);
-        if (check != null) {
-            return check;
+        HttpStatus status = status(userId, token, noteId);
+        if (status != null) {
+            return ResponseEntity.status(status).body(null);
         }
         NoteDTO noteDTO = noteService.editNote(edit, noteId);
         return ResponseEntity.ok(new Response<>(noteDTO));
     }
 
-    private ResponseEntity<Response<NoteDTO>> check(Integer userId, String token, Integer noteId) {
+    @DeleteMapping("{noteId}")
+    public ResponseEntity<Response<String>> deleteNote(@PathVariable("userId") Integer userId,
+                                                       @PathVariable("noteId") Integer noteId,
+                                                       @NotBlank String token) {
+
+        HttpStatus status = status(userId, token, noteId);
+        if (status != null) {
+            return ResponseEntity.status(status).body(null);
+        }
+        noteService.deleteNote(noteId);
+        return ResponseEntity.ok(new Response<>("Note deleted"));
+    }
+
+    private HttpStatus status(Integer userId, String token, Integer noteId) {
         if (!rootService.userExists(userId)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return HttpStatus.NOT_FOUND;
         }
         if (!rootService.authorize(token, userId)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return HttpStatus.UNAUTHORIZED;
         }
         if (!noteService.noteExists(noteId)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null));
+            return HttpStatus.NOT_FOUND;
         }
         return null;
     }
