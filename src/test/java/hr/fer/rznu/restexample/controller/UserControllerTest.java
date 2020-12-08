@@ -24,7 +24,7 @@ class UserControllerTest {
     private UserController controller;
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Test
     public void smokeTest() {
@@ -81,11 +81,11 @@ class UserControllerTest {
     @Test
     public void deleteUserTest() throws Exception {
         mockMvc.perform(delete("/api/users/1")
-                .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
+                .queryParam("token", UserGenerator.getKJEZIC_TOKEN()))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get("/api/users/1")
-                .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
+                .queryParam("token", UserGenerator.getKJEZIC_TOKEN()))
                 .andExpect(status().isNotFound());
     }
 

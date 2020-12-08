@@ -69,11 +69,9 @@ public class UserController {
         if (!rootService.userExists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>("User doesn't exist"));
         }
-        UserDetails userDetails = userService.getUser(id, token);
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response<>("Unauthorized"));
+        if (!userService.deleteUser(token, id)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        userService.deleteUser(id);
         return ResponseEntity.ok(new Response<>("User deleted"));
     }
 

@@ -20,13 +20,12 @@ class UserServiceTest {
         Mockito.when(repository.getByUsername("kjezic")).thenReturn(null);
         Mockito.when(repository.save(Mockito.any())).thenReturn(UserGenerator.createKjezic());
         RootService rootService = Mockito.mock(RootService.class);
-        Mockito.when(rootService.authorize("1234", 1)).thenReturn(true);
 
         UserService service = new UserService(repository, rootService);
         RegisterForm registerForm = RegisterFormGenerator.createRegisterForm();
         LoginResponse response = service.register(registerForm);
         assertEquals(1, response.getId());
-        assertEquals("20aa0ab9-b698-4786-96f5-9f81302ef576", response.getToken());
+        assertEquals(UserGenerator.getKJEZIC_TOKEN(), response.getToken());
     }
 
     @Test
@@ -37,10 +36,10 @@ class UserServiceTest {
         Mockito.when(repository.save(kjezic)).thenReturn(kjezic);
 
         RootService rootService = Mockito.mock(RootService.class);
-        Mockito.when(rootService.authorize("20aa0ab9-b698-4786-96f5-9f81302ef576", 1)).thenReturn(true);
+        Mockito.when(rootService.authorize(UserGenerator.getKJEZIC_TOKEN(), 1)).thenReturn(true);
 
         UserService userService = new UserService(repository, rootService);
-        UserDetails edited = userService.editUser(UserGenerator.createKjezic_toEdit(), 1, "20aa0ab9-b698-4786-96f5-9f81302ef576");
+        UserDetails edited = userService.editUser(UserGenerator.createKjezic_toEdit(), 1, UserGenerator.getKJEZIC_TOKEN());
         assertEquals("karlo.jezic", edited.getUsername());
     }
 }

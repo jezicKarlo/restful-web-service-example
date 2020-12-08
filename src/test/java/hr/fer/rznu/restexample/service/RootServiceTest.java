@@ -63,8 +63,8 @@ class RootServiceTest {
         Mockito.when(repository.findByUsername("jurica")).thenReturn(Optional.of(UserGenerator.createJkenda()));
 
         RootService service = new RootService(repository);
-        assertTrue(service.authorize("20aa0ab9-b698-4786-96f5-9f81302ef576", "kjezic"));
-        assertFalse(service.authorize("20aa0ab9-b698-4786-96f5-9f81302ef576", "jurica"));
+        assertTrue(service.authorize(UserGenerator.getKJEZIC_TOKEN(), "kjezic"));
+        assertFalse(service.authorize(UserGenerator.getKJEZIC_TOKEN(), "jurica"));
     }
 
     @Test

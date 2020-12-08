@@ -29,8 +29,13 @@ public class UserService {
         return loginResponse;
     }
 
-    public void deleteUser(Integer id) {
-        repository.deleteById(id);
+    public boolean deleteUser(String token, Integer id) {
+        if (!rootService.authorize(token, id)) {
+            return false;
+        }
+        User user = repository.getById(id);
+        repository.delete(user);
+        return true;
     }
 
     public UserDetails editUser(EditUser edit, Integer id, String token) {
