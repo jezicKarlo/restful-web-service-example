@@ -10,12 +10,17 @@ import java.util.List;
 public class NoteService {
 
     private final NoteRepository repository;
+    private final RootService rootService;
 
-    public NoteService(NoteRepository repository) {
+    public NoteService(NoteRepository repository, RootService rootService) {
         this.repository = repository;
+        this.rootService = rootService;
     }
 
     public List<Note> getNotes(String token, Integer id) {
+        if (!rootService.authorize(token, id)) {
+            return null;
+        }
         return repository.getAllByUserId(id);
     }
 }
