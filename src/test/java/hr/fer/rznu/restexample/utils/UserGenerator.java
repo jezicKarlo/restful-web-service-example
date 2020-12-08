@@ -11,6 +11,8 @@ public class UserGenerator {
 
     private final String KJEZIC_TOKEN = "20aa0ab9-b698-4786-96f5-9f81302ef576";
     private final String KENDA_TOKEN = "b34528ac-434f-4367-90bb-45c5c2828074";
+    private final int KJEZIC_ID = 1;
+    private final int KENDA_ID = 2;
 
     public User createAdmin() {
         User user = new User();
@@ -62,5 +64,13 @@ public class UserGenerator {
 
     public static String getKENDA_TOKEN() {
         return KENDA_TOKEN;
+    }
+
+    public static int getKjezicId() {
+        return KJEZIC_ID;
+    }
+
+    public static int getKendaId() {
+        return KENDA_ID;
     }
 }

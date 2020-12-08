@@ -12,7 +12,7 @@ public class NoteGenerator {
 
     public NoteBody noteBody_kjezic() {
         NoteBody body = new NoteBody();
-        body.setContent("Content");
+        body.setContent("content");
         body.setName("name");
         return body;
     }
