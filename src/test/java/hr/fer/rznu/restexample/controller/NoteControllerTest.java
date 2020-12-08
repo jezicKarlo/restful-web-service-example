@@ -54,7 +54,7 @@ class NoteControllerTest {
     }
 
     @Test
-    public void getTest() throws Exception {
+    public void getSpecificNoteTest() throws Exception {
         ResultActions post = post(UserGenerator.getKJEZIC_TOKEN(), UserGenerator.getKjezicId());
         String content = post.andReturn().getResponse().getContentAsString();
 
