@@ -58,13 +58,20 @@ class NoteControllerTest {
         ResultActions post = post(UserGenerator.getKJEZIC_TOKEN(), UserGenerator.getKjezicId());
         String content = post.andReturn().getResponse().getContentAsString();
 
-        ResponseParser<NoteDTO> reposnse = GsonGenerator.getGson().fromJson(content,
+        ResponseParser<NoteDTO> response = GsonGenerator.getGson().fromJson(content,
                 new TypeToken<ResponseParser<NoteDTO>>() {
                 }.getType());
 
-        NoteDTO data = reposnse.getData();
-        assertEquals("content", data.getContent());
-        assertEquals("name", data.getName());
+        NoteDTO saved = response.getData();
+
+        mockMvc.perform(get("/api/users/" + UserGenerator.getKjezicId() + "/notes/" + saved.getId())
+                .queryParam("token", UserGenerator.getKJEZIC_TOKEN()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.name").exists())
+                .andExpect(jsonPath("$.data.name").value(saved.getName()))
+                .andExpect(jsonPath("$.data.content").exists())
+                .andExpect(jsonPath("$.data.content").value(saved.getContent()));
     }
 
     @Test
