@@ -55,4 +55,22 @@ public class NoteController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(new Response<>(saved));
     }
+
+    @GetMapping("{noteId}")
+    public ResponseEntity<Response<NoteDTO>> getNote(@PathVariable("userId") Integer userId,
+                                                     @PathVariable("noteId") Integer noteId,
+                                                     @NotBlank String token) {
+
+        if (!rootService.userExists(userId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        if (!rootService.authorize(token, userId)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        if (!noteService.noteExists(noteId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null));
+        }
+        NoteDTO note = noteService.getNote(noteId);
+        return ResponseEntity.ok(new Response<>(note));
+    }
 }

@@ -18,10 +18,25 @@ public class NoteGenerator {
     }
 
     public List<Note> kjezicNotes() {
-        Note note = new Note(noteBody_kjezic());
-        note.setId(1);
         List<Note> notes = new ArrayList<>();
-        notes.add(note);
+        notes.add(kjezicNoteToSave());
         return notes;
+    }
+
+    public Note kjezicNoteToSave() {
+        Note note = new Note();
+        note.setId(1);
+        note.setUser(UserGenerator.createKjezic());
+        note.setName("name");
+        note.setContent("content");
+        return note;
+    }
+
+    public NoteBody kjezicNoteBody() {
+        NoteBody noteBody = new NoteBody();
+        Note note = kjezicNoteToSave();
+        noteBody.setName(note.getName());
+        noteBody.setContent(note.getContent());
+        return noteBody;
     }
 }

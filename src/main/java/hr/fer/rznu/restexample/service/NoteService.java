@@ -43,4 +43,12 @@ public class NoteService {
         toSave.setUser(userRepository.getById(id));
         return new NoteDTO(repository.save(toSave));
     }
+
+    public NoteDTO getNote(Integer id) {
+        return new NoteDTO(repository.getById(id));
+    }
+
+    public boolean noteExists(Integer id) {
+        return repository.findById(id).isPresent();
+    }
 }
