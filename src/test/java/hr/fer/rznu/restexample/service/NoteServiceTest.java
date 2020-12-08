@@ -37,12 +37,12 @@ class NoteServiceTest {
         UserRepository userRepository = Mockito.mock(UserRepository.class);
         RootService rootService = Mockito.mock(RootService.class);
 
-        Note note = NoteGenerator.kjezicNoteToSave();
+        Note note = NoteGenerator.kjezicNote();
         Mockito.when(noteRepository.save(Mockito.any())).thenReturn(note);
         Mockito.when(rootService.authorize(UserGenerator.getKJEZIC_TOKEN(), 1)).thenReturn(true);
 
         NoteService noteService = new NoteService(noteRepository, rootService, userRepository);
-        NoteDTO saved = noteService.saveNote(NoteGenerator.noteBody_kjezic(), UserGenerator.getKJEZIC_TOKEN(), 1);
+        NoteDTO saved = noteService.saveNote(NoteGenerator.kjezicNoteBody(), UserGenerator.getKJEZIC_TOKEN(), 1);
 
         assertNotNull(saved);
         assertEquals("content", saved.getContent());
@@ -56,14 +56,30 @@ class NoteServiceTest {
         UserRepository userRepository = Mockito.mock(UserRepository.class);
         RootService rootService = Mockito.mock(RootService.class);
 
-        Note note = NoteGenerator.kjezicNoteToSave();
+        Note note = NoteGenerator.kjezicNote();
         Mockito.when(noteRepository.save(Mockito.any())).thenReturn(note);
         Mockito.when(rootService.authorize(UserGenerator.getKJEZIC_TOKEN(), 1)).thenReturn(true);
 
         NoteService noteService = new NoteService(noteRepository, rootService, userRepository);
-        NoteDTO saved = noteService.saveNote(NoteGenerator.noteBody_kjezic(), UserGenerator.getKENDA_TOKEN(), 1);
+        NoteDTO saved = noteService.saveNote(NoteGenerator.kjezicNoteBody(), UserGenerator.getKENDA_TOKEN(), 1);
 
         assertNull(saved);
+    }
+
+    @Test
+    public void editNoteTest() {
+        NoteRepository noteRepository = Mockito.mock(NoteRepository.class);
+        UserRepository userRepository = Mockito.mock(UserRepository.class);
+        RootService rootService = Mockito.mock(RootService.class);
+
+        Mockito.when(noteRepository.getById(NoteGenerator.getKejzicNoteId())).thenReturn(NoteGenerator.kjezicNote());
+        Mockito.when(noteRepository.save(Mockito.any())).thenReturn(NoteGenerator.kjezicEditedNote());
+
+        NoteService service = new NoteService(noteRepository, rootService, userRepository);
+        NoteDTO editedNote = service.editNote(NoteGenerator.editNote(), NoteGenerator.getKejzicNoteId());
+        assertNotNull(editedNote);
+        assertEquals("NAME", editedNote.getName());
+        assertEquals("CONTENT", editedNote.getContent());
     }
 
 }

@@ -10,22 +10,17 @@ import java.util.List;
 @UtilityClass
 public class NoteGenerator {
 
-    public NoteBody noteBody_kjezic() {
-        NoteBody body = new NoteBody();
-        body.setContent("content");
-        body.setName("name");
-        return body;
-    }
+    private final int KEJZIC_NOTE_ID = 1;
 
     public List<Note> kjezicNotes() {
         List<Note> notes = new ArrayList<>();
-        notes.add(kjezicNoteToSave());
+        notes.add(kjezicNote());
         return notes;
     }
 
-    public Note kjezicNoteToSave() {
+    public Note kjezicNote() {
         Note note = new Note();
-        note.setId(1);
+        note.setId(KEJZIC_NOTE_ID);
         note.setUser(UserGenerator.createKjezic());
         note.setName("name");
         note.setContent("content");
@@ -34,9 +29,27 @@ public class NoteGenerator {
 
     public NoteBody kjezicNoteBody() {
         NoteBody noteBody = new NoteBody();
-        Note note = kjezicNoteToSave();
+        Note note = kjezicNote();
         noteBody.setName(note.getName());
         noteBody.setContent(note.getContent());
         return noteBody;
+    }
+
+    public Note kjezicEditedNote() {
+        Note noteToEdit = kjezicNote();
+        noteToEdit.setContent("CONTENT");
+        noteToEdit.setName("NAME");
+        return noteToEdit;
+    }
+
+    public NoteBody editNote() {
+        NoteBody noteBody = new NoteBody();
+        noteBody.setContent("CONTENT");
+        noteBody.setName("NAME");
+        return noteBody;
+    }
+
+    public static int getKejzicNoteId() {
+        return KEJZIC_NOTE_ID;
     }
 }

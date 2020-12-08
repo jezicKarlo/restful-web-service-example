@@ -84,7 +84,7 @@ class NoteControllerTest {
         return mockMvc.perform(MockMvcRequestBuilders.post("/api/users/" + id + "/notes")
                 .queryParam("token", token)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(GsonGenerator.getGson().toJson(NoteGenerator.noteBody_kjezic())));
+                .content(GsonGenerator.getGson().toJson(NoteGenerator.kjezicNoteBody())));
     }
 
 }
