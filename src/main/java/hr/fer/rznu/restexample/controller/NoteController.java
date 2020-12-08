@@ -27,8 +27,8 @@ public class NoteController {
     }
 
     @GetMapping
-    public ResponseEntity<Response<List<Note>>> getNotes(@PathVariable("userId") Integer id,
-                                                         @NotBlank String token) {
+    public ResponseEntity<Response<List<Note>>> getUserNotes(@PathVariable("userId") Integer id,
+                                                             @NotBlank String token) {
 
         if (!rootService.userExists(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
