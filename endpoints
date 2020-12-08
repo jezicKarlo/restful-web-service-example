@@ -10,7 +10,6 @@ DELETE -> delete user
 /users/{userId}/notes
 GET -> fetch all user notes
 POST -> create new note
-DELETE -> delete all notes
 
 users/{userId}/notes/{noteId}
 GET -> fetch note
