@@ -1,6 +1,7 @@
 package hr.fer.rznu.restexample.controller;
 
 import com.google.gson.reflect.TypeToken;
+import hr.fer.rznu.restexample.dto.NoteBody;
 import hr.fer.rznu.restexample.dto.NoteDTO;
 import hr.fer.rznu.restexample.utils.GsonGenerator;
 import hr.fer.rznu.restexample.utils.NoteGenerator;
@@ -17,8 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,28 +56,43 @@ class NoteControllerTest {
     @Test
     public void getSpecificNoteTest() throws Exception {
         ResultActions post = post(UserGenerator.getKJEZIC_TOKEN(), UserGenerator.getKjezicId());
-        String content = post.andReturn().getResponse().getContentAsString();
 
-        ResponseParser<NoteDTO> response = GsonGenerator.getGson().fromJson(content,
-                new TypeToken<ResponseParser<NoteDTO>>() {
-                }.getType());
+        NoteDTO note = ResponseParser.parse(post);
 
-        NoteDTO saved = response.getData();
-
-        mockMvc.perform(get("/api/users/" + UserGenerator.getKjezicId() + "/notes/" + saved.getId())
+        mockMvc.perform(get("/api/users/" + UserGenerator.getKjezicId() + "/notes/" + note.getId())
                 .queryParam("token", UserGenerator.getKJEZIC_TOKEN()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.name").exists())
-                .andExpect(jsonPath("$.data.name").value(saved.getName()))
+                .andExpect(jsonPath("$.data.name").value(note.getName()))
                 .andExpect(jsonPath("$.data.content").exists())
-                .andExpect(jsonPath("$.data.content").value(saved.getContent()));
+                .andExpect(jsonPath("$.data.content").value(note.getContent()));
     }
 
     @Test
     public void postTest_unauthorized() throws Exception {
         ResultActions resultActions = post(UserGenerator.getKJEZIC_TOKEN(), UserGenerator.getKendaId());
         resultActions.andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void editNoteTest() throws Exception {
+        ResultActions post = post(UserGenerator.getKJEZIC_TOKEN(), UserGenerator.getKjezicId());
+        post.andExpect(status().isCreated());
+
+        NoteDTO note = ResponseParser.parse(post);
+        NoteBody edit = NoteGenerator.editNote();
+
+        mockMvc.perform(put("/api/users/1/notes/" + note.getId())
+                .queryParam("token", UserGenerator.getKJEZIC_TOKEN())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(GsonGenerator.getGson().toJson(edit)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").exists())
+                .andExpect(jsonPath("$.data.name").exists())
+                .andExpect(jsonPath("$.data.name").value(edit.getName()))
+                .andExpect(jsonPath("$.data.content").exists())
+                .andExpect(jsonPath("$.data.content").value(edit.getContent()));
     }
 
     private ResultActions post(String token, Integer id) throws Exception {
