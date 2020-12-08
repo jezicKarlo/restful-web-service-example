@@ -16,8 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -92,6 +91,22 @@ class NoteControllerTest {
                 .andExpect(jsonPath("$.data.name").value(edit.getName()))
                 .andExpect(jsonPath("$.data.content").exists())
                 .andExpect(jsonPath("$.data.content").value(edit.getContent()));
+    }
+
+    @Test
+    public void deleteNoteTest() throws Exception {
+        ResultActions post = post(UserGenerator.getKJEZIC_TOKEN(), UserGenerator.getKjezicId());
+        post.andExpect(status().isCreated());
+
+        NoteDTO note = ResponseParser.parse(post);
+
+        mockMvc.perform(delete("/api/users/1/notes/" + note.getId())
+                .queryParam("token", UserGenerator.getKJEZIC_TOKEN()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/users/notes/" + note.getId())
+                .queryParam("token", UserGenerator.getKJEZIC_TOKEN()))
+                .andExpect(status().isNotFound());
     }
 
     private ResultActions post(String token, Integer id) throws Exception {
