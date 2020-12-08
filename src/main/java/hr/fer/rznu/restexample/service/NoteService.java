@@ -51,4 +51,12 @@ public class NoteService {
     public boolean noteExists(Integer id) {
         return repository.findById(id).isPresent();
     }
+
+    public NoteDTO editNote(NoteBody noteBody, Integer id) {
+        Note noteToEdit = repository.getById(id);
+        noteToEdit.setContent(noteBody.getContent());
+        noteToEdit.setName(noteBody.getName());
+        Note saved = repository.save(noteToEdit);
+        return new NoteDTO(saved);
+    }
 }

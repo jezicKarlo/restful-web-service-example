@@ -61,6 +61,29 @@ public class NoteController {
                                                      @PathVariable("noteId") Integer noteId,
                                                      @NotBlank String token) {
 
+        ResponseEntity<Response<NoteDTO>> check = check(userId, token, noteId);
+        if (check != null) {
+            return check;
+        }
+        NoteDTO note = noteService.getNote(noteId);
+        return ResponseEntity.ok(new Response<>(note));
+    }
+
+    @PutMapping("{noteId}")
+    public ResponseEntity<Response<NoteDTO>> editNote(@PathVariable("userId") Integer userId,
+                                                      @PathVariable("noteId") Integer noteId,
+                                                      @Valid @RequestBody NoteBody edit,
+                                                      @NotBlank String token) {
+
+        ResponseEntity<Response<NoteDTO>> check = check(userId, token, noteId);
+        if (check != null) {
+            return check;
+        }
+        NoteDTO noteDTO = noteService.editNote(edit, noteId);
+        return ResponseEntity.ok(new Response<>(noteDTO));
+    }
+
+    private ResponseEntity<Response<NoteDTO>> check(Integer userId, String token, Integer noteId) {
         if (!rootService.userExists(userId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -70,7 +93,6 @@ public class NoteController {
         if (!noteService.noteExists(noteId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null));
         }
-        NoteDTO note = noteService.getNote(noteId);
-        return ResponseEntity.ok(new Response<>(note));
+        return null;
     }
 }
