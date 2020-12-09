@@ -68,6 +68,17 @@ class NoteControllerTest {
     }
 
     @Test
+    public void getSpecificNoteTest_unauthorized() throws Exception {
+        ResultActions post = post(UserGenerator.getKJEZIC_TOKEN(), UserGenerator.getKjezicId());
+
+        NoteDTO note = ResponseParser.parse(post);
+
+        mockMvc.perform(get("/api/users/" + UserGenerator.getKjezicId() + "/notes/" + note.getId())
+                .queryParam("token", UserGenerator.getKENDA_TOKEN()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void postTest_unauthorized() throws Exception {
         ResultActions resultActions = post(UserGenerator.getKJEZIC_TOKEN(), UserGenerator.getKendaId());
         resultActions.andExpect(status().isUnauthorized());
