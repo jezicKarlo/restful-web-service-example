@@ -4,6 +4,7 @@ import hr.fer.rznu.restexample.dto.RegisterForm;
 import hr.fer.rznu.restexample.utils.GsonGenerator;
 import hr.fer.rznu.restexample.utils.RegisterFormGenerator;
 import hr.fer.rznu.restexample.utils.UserGenerator;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -45,6 +46,14 @@ class UserControllerTest {
     }
 
     @Test
+    public void loginTest_wrongPassword() throws Exception {
+        mockMvc.perform(get("/api/users")
+                .queryParam("username", "kjezic")
+                .queryParam("password", "111"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void registerTest() throws Exception {
         RegisterForm registerForm = RegisterFormGenerator.createRealRegisterForm();
         mockMvc.perform(post("/api/users")
@@ -65,7 +74,7 @@ class UserControllerTest {
     @Test
     public void profileTest() throws Exception {
         mockMvc.perform(get("/api/users/1")
-                .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
+                .queryParam("token", UserGenerator.getKJEZIC_TOKEN()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.id").exists())
@@ -92,7 +101,7 @@ class UserControllerTest {
     @Test
     public void editUser() throws Exception {
         mockMvc.perform(get("/api/users/1")
-                .queryParam("token", "20aa0ab9-b698-4786-96f5-9f81302ef576"))
+                .queryParam("token", UserGenerator.getKJEZIC_TOKEN()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.data.username").exists())
